@@ -3,9 +3,9 @@ name: CI
 on:
   workflow_dispatch:
   pull_request:
-    branches: [main, develop, feature]
+    branches: [main, develop]
   push:
-    branches: [main, develop, feature]
+    branches: [main, develop]
 
 jobs:
   mypy:
