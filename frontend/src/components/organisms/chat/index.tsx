@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
@@ -44,6 +45,22 @@ const Chat = () => {
   const fileSpec = useMemo(() => ({ max_size_mb: 500 }), []);
 
   const { t } = useTranslation();
+
+  /**
+   *  lighthouse <Start>
+   */
+  const { clear } = useChatInteract();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // confirm("이동 시 대화 기록이 초기화 됩니다.")
+    clear();
+    navigate('/');
+  }, []);
+
+  /**
+   *  lighthouse <End>
+   */
 
   useEffect(() => {
     uploadFileRef.current = uploadFile;

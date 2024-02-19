@@ -105,7 +105,7 @@ const Messages = ({
     return (
       <WelcomeScreen
         variant="copilot"
-        markdown={projectSettings?.markdown}
+        markdown={projectSettings?.markdown_lighthouse}
         allowHtml={projectSettings?.features?.unsafe_allow_html}
         latex={projectSettings?.features?.latex}
       />
