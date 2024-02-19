@@ -26,6 +26,10 @@ export default function AppWrapper() {
     i18n.changeLanguage(languageInUse);
   }
 
+  /***<Lighthouse>
+   api /project/settings 통신해서 데이터 받는 곳
+   - README 텍스트
+  ***/
   const { data } = useApi<IProjectSettings>(
     apiClient,
     projectSettings === undefined && isAuthenticated
@@ -44,6 +48,11 @@ export default function AppWrapper() {
 
   useEffect(() => {
     if (!data) return;
+
+    /***<Lighthouse>
+     useEffect -> 컴포넌트 부수 행동
+     이곳에서 AppWraper 가 렌더링 될 때, Makdown text 를 지정
+     ***/
     setProjectSettings(data);
     setAppSettings((prev) => ({
       ...prev,
