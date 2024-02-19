@@ -32,7 +32,7 @@ from chainlit.config import (
 from chainlit.data import get_data_layer
 from chainlit.data.acl import is_thread_author
 from chainlit.logger import logger
-from chainlit.markdown import get_markdown_str
+from chainlit.markdown import get_markdown_lighthouse_str, get_markdown_str
 from chainlit.playground.config import get_llm_providers
 from chainlit.telemetry import trace_event
 from chainlit.types import (
@@ -518,6 +518,7 @@ async def project_settings(
             "dataPersistence": get_data_layer() is not None,
             "threadResumable": bool(config.code.on_chat_resume),
             "markdown": get_markdown_str(config.root),
+            "markdown_lighthouse": get_markdown_lighthouse_str(config.root),
             "chatProfiles": profiles,
             "translation": translation,
         }
