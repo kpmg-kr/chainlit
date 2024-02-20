@@ -87,6 +87,19 @@ const Nav = ({ dataPersistence, hasReadme, matches }: NavProps) => {
     });
   }
 
+  /***
+   Lighthouse Header
+   ***/
+  tabs.push({
+    to: '/custom',
+    label: t('Lighthouse Chat')
+  });
+
+  tabs.push({
+    to: '/custom_readme',
+    label: t('Lighthouse Readme')
+  });
+
   const nav = (
     <Stack direction={matches ? 'column' : 'row'} spacing={1}>
       {tabs.map((t) => {
@@ -165,7 +178,7 @@ const Header = memo(
             <Nav
               matches={matches}
               dataPersistence={projectSettings?.dataPersistence}
-              hasReadme={!!projectSettings?.markdown}
+              hasReadme={!!projectSettings?.markdown_lighthouse}
             />
           </Stack>
           <Stack

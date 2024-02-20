@@ -1,17 +1,13 @@
-import { WidgetContext } from 'context';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { toast } from 'sonner';
 
-import WelcomeScreen from '@chainlit/app/src/components/organisms/chat/Messages/welcomeScreen';
-import {
-  IProjectSettings,
-  projectSettingsState
-} from '@chainlit/app/src/state/project';
 import {
   IAction,
   IFeedback,
   IStep,
+  accessTokenState,
   messagesState,
   updateMessageById,
   useChatData,
@@ -20,7 +16,11 @@ import {
   useChatSession
 } from '@chainlit/react-client';
 
+import { apiClientState } from 'state/apiClient';
+import { IProjectSettings } from 'state/project';
+
 import MessageContainer from './container';
+import WelcomeScreen from './welcomeScreen';
 
 interface MessagesProps {
   autoScroll: boolean;
@@ -28,37 +28,45 @@ interface MessagesProps {
   setAutoScroll: (autoScroll: boolean) => void;
 }
 
-const Messages = ({
+const MessagesLighthouse = ({
   autoScroll,
+  projectSettings,
   setAutoScroll
 }: MessagesProps): JSX.Element => {
-  const projectSettings = useRecoilValue(projectSettingsState);
-  const { apiClient, accessToken } = useContext(WidgetContext);
-  const { idToResume } = useChatSession();
-
   const { elements, askUser, avatars, loading, actions } = useChatData();
   const { messages } = useChatMessages();
   const { callAction } = useChatInteract();
+  const { idToResume } = useChatSession();
+  const accessToken = useRecoilValue(accessTokenState);
   const setMessages = useSetRecoilState(messagesState);
+  const apiClient = useRecoilValue(apiClientState);
+
+  const { t } = useTranslation();
 
   const callActionWithToast = useCallback(
     (action: IAction) => {
       const promise = callAction(action);
       if (promise) {
         toast.promise(promise, {
-          loading: `Running ${action.name}`,
+          loading: `${t('components.organisms.chat.Messages.index.running')} ${
+            action.name
+          }`,
           success: (res) => {
             if (res.response) {
               return res.response;
             } else {
-              return `${action.name} executed successfully`;
+              return `${action.name} ${t(
+                'components.organisms.chat.Messages.index.executedSuccessfully'
+              )}`;
             }
           },
           error: (res) => {
             if (res.response) {
               return res.response;
             } else {
-              return `${action.name} failed`;
+              return `${action.name} ${t(
+                'components.organisms.chat.Messages.index.failed'
+              )}`;
             }
           }
         });
@@ -71,7 +79,7 @@ const Messages = ({
     async (message: IStep, onSuccess: () => void, feedback: IFeedback) => {
       try {
         toast.promise(apiClient.setFeedback(feedback, accessToken), {
-          loading: 'Updating',
+          loading: t('components.organisms.chat.Messages.index.updating'),
           success: (res) => {
             setMessages((prev) =>
               updateMessageById(prev, message.id, {
@@ -83,7 +91,9 @@ const Messages = ({
               })
             );
             onSuccess();
-            return 'Feedback updated!';
+            return t(
+              'components.organisms.chat.Messages.index.feedbackUpdated'
+            );
           },
           error: (err) => {
             return <span>{err.message}</span>;
@@ -96,23 +106,20 @@ const Messages = ({
     []
   );
 
-  const showWelcomeScreen =
-    !idToResume &&
+  /**
+   * Lightouse
+   * 초기 ChatPage Readme 불러오는 곳
+   */
+  return !idToResume &&
     !messages.length &&
-    projectSettings?.ui.show_readme_as_default;
-
-  if (showWelcomeScreen) {
-    return (
-      <WelcomeScreen
-        variant="copilot"
-        markdown={projectSettings?.markdown_lighthouse}
-        allowHtml={projectSettings?.features?.unsafe_allow_html}
-        latex={projectSettings?.features?.latex}
-      />
-    );
-  }
-
-  return (
+    projectSettings?.ui.show_readme_as_default ? (
+    <WelcomeScreen
+      variant="app"
+      markdown={projectSettings?.markdown_lighthouse}
+      allowHtml={projectSettings?.features?.unsafe_allow_html}
+      latex={projectSettings?.features?.latex}
+    />
+  ) : (
     <MessageContainer
       avatars={avatars}
       loading={loading}
@@ -128,4 +135,4 @@ const Messages = ({
   );
 };
 
-export default Messages;
+export default MessagesLighthouse;

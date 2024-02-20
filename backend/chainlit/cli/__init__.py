@@ -19,7 +19,7 @@ from chainlit.config import (
     load_module,
 )
 from chainlit.logger import logger
-from chainlit.markdown import init_markdown
+from chainlit.markdown import init_markdown, init_markdown_lighthouse
 from chainlit.secret import random_secret
 from chainlit.server import app, register_wildcard_route_handler
 from chainlit.telemetry import trace_event
@@ -60,6 +60,7 @@ def run_chainlit(target: str):
 
     # Create the chainlit.md file if it doesn't exist
     init_markdown(config.root)
+    init_markdown_lighthouse(config.root)
 
     # Initialize the LangChain cache if installed and enabled
     init_lc_cache()

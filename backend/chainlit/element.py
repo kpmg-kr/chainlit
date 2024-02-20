@@ -232,7 +232,8 @@ class Pyplot(Element):
             "format": "png",
         }
         image = BytesIO()
-        self.figure.savefig(image, **options)
+        # self.figure.savefig(image, **options)
+        self.figure.savefig(image, option=True)
         self.content = image.getvalue()
 
         super().__post_init__()

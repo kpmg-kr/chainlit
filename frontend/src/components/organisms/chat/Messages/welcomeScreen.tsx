@@ -29,7 +29,7 @@ const WelcomeScreen = memo(
             width: '100%',
             mx: 'auto',
             color: 'text.primary',
-            lineHeight: '25px',
+            lineHeight: '40px',
             fontSize: variant === 'app' ? '1rem' : '0.9rem',
             fontFamily:
               '-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji',

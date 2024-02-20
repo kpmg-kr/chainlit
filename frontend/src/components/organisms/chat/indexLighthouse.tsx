@@ -24,11 +24,13 @@ import { apiClientState } from 'state/apiClient';
 import { IAttachment, attachmentsState } from 'state/chat';
 import { projectSettingsState, sideViewState } from 'state/project';
 
-import Messages from './Messages';
+import MessagesLighthouse from './Messages/indexLighthouse';
 import DropScreen from './dropScreen';
-import InputBox from './inputBox';
+import InputBoxLighthouse from './inputBox/indexLighthouse';
 
-const Chat = () => {
+// import InputBoxLighthouse from './inputBox';
+
+const Chat_Lighthouse = () => {
   const { idToResume } = useChatSession();
 
   const projectSettings = useRecoilValue(projectSettingsState);
@@ -49,13 +51,14 @@ const Chat = () => {
   /**
    *  lighthouse <Start>
    */
+
   const { clear } = useChatInteract();
   const navigate = useNavigate();
 
   useEffect(() => {
     // confirm("이동 시 대화 기록이 초기화 됩니다.")
     clear();
-    navigate('/');
+    navigate('/custom');
   }, []);
 
   /**
@@ -188,6 +191,7 @@ const Chat = () => {
           {upload?.isDragActive ? <DropScreen /> : null}
         </>
       ) : null}
+
       <SideView>
         <Box my={1} />
         {error ? (
@@ -221,12 +225,17 @@ const Chat = () => {
         <TaskList isMobile={true} />
         <ErrorBoundary>
           <ChatProfiles />
-          <Messages
+
+          {/*
+           Lighthouse
+           Messgaes 컴포턴트 안에 Chat Main Page Markdown 불러오는 로직 있음.
+          */}
+          <MessagesLighthouse
             autoScroll={autoScroll}
             projectSettings={projectSettings}
             setAutoScroll={setAutoScroll}
           />
-          <InputBox
+          <InputBoxLighthouse
             fileSpec={fileSpec}
             onFileUpload={onFileUpload}
             onFileUploadError={onFileUploadError}
@@ -241,4 +250,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default Chat_Lighthouse;
